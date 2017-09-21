@@ -46,6 +46,7 @@ class Box {
         this.y;
         this.attr = {stroke: "black", fill: 'white'}
         this.size;
+        this.ccb = () => {};
     }
 
     size(size) {
@@ -65,6 +66,11 @@ class Box {
         return this;
     }
 
+    onClick(cb){
+        this.ccb = cb;
+        return this;
+    }
+
     findCenter() {
         return new Vector(
             this.x * this.size + (this.size / 2),
@@ -74,6 +80,7 @@ class Box {
 
     drawBox() {
         let percentage = .75
+        let ccb = this.ccb;
         this.r.rect(
             this.x * this.size + (this.size * (1 - percentage) / 2),
             this.y * this.size + (this.size * (1 - percentage) / 2),
@@ -89,6 +96,7 @@ class Box {
                 case 2: break;
                 case 3: this.attr({stroke: "black", fill: 'white'}); break;
             }
+            ccb();
             // this.attr({stroke: "black", fill: 'black'})
         });
     }
@@ -118,9 +126,10 @@ class Canvas {
     }
 
     coordToPos(x, y) {
-        x = 2.0 * x / this.width - 1;
-        y = - 2.0 * y / this.length + 1;
-        return new Vector(width - 2 )
+        console.log(x, y)
+        x = x / this.width;
+        y =  y / this.length  ;
+        return new Vector(x, y)
     }
 
     makeCanvas() {
@@ -128,10 +137,16 @@ class Canvas {
     }
 
     makeGrid() {
-        for (var y = 0; y < this.length; y++ ) {
-            for (var x = 0; x < this.width; x++ ) {
-                let box = new Box(this.r).size(this.size).position(x, y);
-                this.grid.push(box);
+        for (let y = 0; y < this.length; y++ ) {
+            for (let x = 0; x < this.width; x++ ) {
+                // console.log(this.coordToPos(x, y))
+                
+                this.grid.push(
+                    new Box(this.r)
+                    .size(this.size)
+                    .position(x, y)
+                    .onClick(() => {console.log(this.coordToPos(x, y))})
+                );
 
             }
         }
