@@ -107,8 +107,14 @@ class Box {
         .attr({stroke: "cyan", fill: 'cyan'})
     }
 
+    text() {
+        let center = this.findCenter();
+        this.r.text(center.x, center.y, 'D').attr({'font-size': 25, 'font-weight': 'bold', 'fill': 'cyan'})
+    }
+
     display() {
         this.drawBox();
+        this.text();
         // this.drawCenter();
     }
 
@@ -116,9 +122,9 @@ class Box {
 
 
 class Canvas {
-    constructor(length, width, size) {
+    constructor(length, height, size) {
         this.length = length;
-        this.width = width;
+        this.height = height;
         this.size = size;
         this.r;
         this.makeCanvas();
@@ -127,18 +133,18 @@ class Canvas {
 
     coordToPos(x, y) {
         console.log(x, y)
-        x = x / this.width;
-        y =  y / this.length  ;
+        x = x - ((this.height - 1) / 2);
+        y =  y + ((this.length - 1) / 2) * -1;
         return new Vector(x, y)
     }
 
     makeCanvas() {
-        this.r = Raphael(0,0, this.length * this.size, this.width * this.size)
+        this.r = Raphael(0,0, this.length * this.size, this.height * this.size)
     }
 
     makeGrid() {
         for (let y = 0; y < this.length; y++ ) {
-            for (let x = 0; x < this.width; x++ ) {
+            for (let x = 0; x < this.height; x++ ) {
                 // console.log(this.coordToPos(x, y))
                 
                 this.grid.push(
